@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Runner</title>
+  <!-- CodeMirror CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+  <!-- Google Fonts and Material Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #1e1e1e; /* Dark background */
+      position: relative;
+    }
+    .topbar {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background: #282a36; /* Dracula theme background */
+      color: white;
+    }
+    .topbar button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #44475a; /* Button color */
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    .topbar button:hover {
+      background-color: #6272a4;
+    }
+    .editor {
+      flex: 1;
+      overflow: hidden;
+    }
+    .CodeMirror {
+      height: 100%;
+      font-size: 14px;
+    }
+    .output-screen {
+      position: fixed;
+      inset: 0;
+      background: white;
+      display: none;
+      flex-direction: column;
+      z-index: 20; /* Ensure output is on top */
+    }
+    .output-screen iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+    }
+    .output-topbar {
+      background: #282a36;
+      padding: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .output-topbar button {
+      background: crimson;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .output-topbar button:hover {
+      background-color: #ff5555;
+    }
+    .signature {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-family: 'Pacifico', cursive;
+      font-size: 1.2em;
+      color: #f8f8f2;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 10;
+      transition: opacity 0.3s ease; /* For smooth hiding */
+    }
+    .signature.hidden {
+      opacity: 0;
+      pointer-events: none; /* Make it un-clickable when hidden */
+    }
+    .signature .material-symbols-outlined {
+      font-size: 1.2em;
+      color: #ff79c6; /* Pink color for heart */
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <button onclick="runCode()"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 1.2em;">play_arrow</span> Run</button>
+    <button onclick="insertStructure()"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 1.2em;">html</span> Structure</button>
+    <button onclick="toggleWordWrap()"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 1.2em;">wrap_text</span> Wrap</button>
+  </div>
+  <div class="editor">
+    <textarea id="code"></textarea>
+  </div>
+
+  <div class="output-screen" id="outputScreen">
+    <div class="output-topbar">
+      <button onclick="closeOutput()"><span class="material-symbols-outlined" style="vertical-align: middle; font-size: 1.2em;">close</span> Close</button>
+    </div>
+    <iframe id="outputFrame"></iframe>
+  </div>
+
+  <div class="signature" id="signature">
+    <span>Crafted with</span>
+    <span class="material-symbols-outlined">favorite</span>
+    <span>by Najaf</span>
+  </div>
+
+  <!-- CodeMirror JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+  
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      mode: "htmlmixed",
+      lineNumbers: true,
+      theme: "dracula"
+    });
+
+    const outputScreen = document.getElementById("outputScreen");
+    const outputFrame = document.getElementById("outputFrame");
+    const signature = document.getElementById("signature");
+    let isWrapped = false;
+
+    function runCode() {
+      outputScreen.style.display = "flex";
+      signature.classList.add("hidden"); /* Hide the signature */
+      outputFrame.srcdoc = editor.getValue();
+    }
+
+    function closeOutput() {
+      outputScreen.style.display = "none";
+      signature.classList.remove("hidden"); /* Show the signature */
+      outputFrame.srcdoc = "";
+    }
+
+    function insertStructure() {
+      editor.setValue(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+</head>
+<body>
+
+</body>
+</html>`);
+    }
+
+    function toggleWordWrap() {
+      isWrapped = !isWrapped;
+      editor.setOption("lineWrapping", isWrapped);
+    }
+  </script>
+</body>
+</html>
