@@ -80,27 +80,6 @@
     .output-topbar button:hover {
       background-color: #ff5555;
     }
-    .signature {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-family: 'Pacifico', cursive;
-      font-size: 1.2em;
-      color: #f8f8f2;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      z-index: 10;
-      transition: opacity 0.3s ease; /* For smooth hiding */
-    }
-    .signature.hidden {
-      opacity: 0;
-      pointer-events: none; /* Make it un-clickable when hidden */
-    }
-    .signature .material-symbols-outlined {
-      font-size: 1.2em;
-      color: #ff79c6; /* Pink color for heart */
-    }
   </style>
 </head>
 <body>
@@ -119,6 +98,8 @@
     </div>
     <iframe id="outputFrame"></iframe>
   </div>
+
+
   <!-- CodeMirror JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
@@ -135,18 +116,16 @@
 
     const outputScreen = document.getElementById("outputScreen");
     const outputFrame = document.getElementById("outputFrame");
-    const signature = document.getElementById("signature");
+
     let isWrapped = false;
 
     function runCode() {
       outputScreen.style.display = "flex";
-      signature.classList.add("hidden"); /* Hide the signature */
       outputFrame.srcdoc = editor.getValue();
     }
 
     function closeOutput() {
       outputScreen.style.display = "none";
-      signature.classList.remove("hidden"); /* Show the signature */
       outputFrame.srcdoc = "";
     }
 
@@ -171,4 +150,3 @@
   </script>
 </body>
 </html>
-
