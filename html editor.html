@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Runner</title>
+  <!-- CodeMirror CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .topbar {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background: #222;
+      color: white;
+    }
+    .topbar button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #444;
+      color: white;
+    }
+    .editor {
+      flex: 1;
+      overflow: hidden;
+    }
+    .CodeMirror {
+      height: 100%;
+      font-size: 14px;
+    }
+    .output-screen {
+      position: fixed;
+      inset: 0;
+      background: white;
+      display: none;
+      flex-direction: column;
+    }
+    .output-screen iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+    }
+    .output-topbar {
+      background: #222;
+      padding: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .output-topbar button {
+      background: crimson;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <button onclick="runCode()">? Run</button>
+    <button onclick="insertStructure()">?? Structure</button>
+  </div>
+  <div class="editor">
+    <textarea id="code"></textarea>
+  </div>
+
+  <div class="output-screen" id="outputScreen">
+    <div class="output-topbar">
+      <button onclick="closeOutput()">? Close</button>
+    </div>
+    <iframe id="outputFrame"></iframe>
+  </div>
+<h1>Created by Najaf</h1>
+  <!-- CodeMirror JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      mode: "htmlmixed",
+      lineNumbers: true,
+      theme: "dracula"
+    });
+
+    const outputScreen = document.getElementById("outputScreen");
+    const outputFrame = document.getElementById("outputFrame");
+
+    function runCode() {
+      outputScreen.style.display = "flex";
+      outputFrame.srcdoc = editor.getValue();
+    }
+
+    function closeOutput() {
+      outputScreen.style.display = "none";
+      outputFrame.srcdoc = "";
+    }
+
+    function insertStructure() {
+      editor.setValue(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+</head>
+<body>
+
+</body>
+</html>`);
+    }
+  </script>
+</body>
+</html>
